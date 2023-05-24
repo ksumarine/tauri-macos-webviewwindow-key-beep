@@ -1,14 +1,26 @@
 <template>
 	<div class="container">
+		{{ keyPressed }}
 		<a @click="openWindow">Open window...</a>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { WebviewWindow, type WindowOptions } from "@tauri-apps/api/window";
+import { onMounted, onUnmounted, ref } from "vue";
 
+const keyPressed = ref("n/a");
+onMounted(() => {
+	window.addEventListener("keydown", onKeyDown);
+});
+onUnmounted(() => {
+	window.removeEventListener("keydown", onKeyDown);
+});
+const onKeyDown = (e: KeyboardEvent) => {
+	keyPressed.value = e.code;
+};
 const openWindow = (e: MouseEvent) => {
-  console.log(e)
+	console.log(e);
 	const options: WindowOptions = {
 		url: "secondary.html",
 		title: "Another window...",
